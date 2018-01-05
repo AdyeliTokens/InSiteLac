@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="LAC" size="15.000000 4.222222" />
+    <ImageTarget name="milCarasDElDiablo" size="15.000000 19.911505" />
+    <ImageTarget name="OPERATION" size="5.000000 8.885135" />
+  </Tracking>
+</QCARConfig>
