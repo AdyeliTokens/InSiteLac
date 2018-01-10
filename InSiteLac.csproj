@@ -124,6 +124,7 @@
     <Compile Include="Assets\LeanTouch\Scripts\LeanSelectable.cs" />
     <Compile Include="Assets\LeanTouch\Scripts\LeanSnapshot.cs" />
     <Compile Include="Assets\LeanTouch\Scripts\LeanTouch.cs" />
+    <Compile Include="Assets\Scripts\CamGryoAR.cs" />
     <Compile Include="Assets\Scripts\DiapositivaController.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
     <Compile Include="Assets\Scripts\OrientacionScript.cs" />

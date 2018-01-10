@@ -5,6 +5,7 @@ using System;
 
 public class ImportSpheres : MonoBehaviour
 {
+    public GameObject texto;
 
     IEnumerator DownloadSpheres()
     {
