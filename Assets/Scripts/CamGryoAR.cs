@@ -13,8 +13,8 @@ public class CamGryoAR : MonoBehaviour
     void Start()
     {
         camParent = new GameObject("CamParent");
-        camParent.transform.position = this.transform.position;
-        this.transform.parent = camParent.transform;
+        camParent.transform.position = transform.position;
+        transform.parent = camParent.transform;
         camParent.transform.Rotate(Vector3.right, 90);
         Input.gyro.enabled = true;
 
@@ -30,6 +30,6 @@ public class CamGryoAR : MonoBehaviour
             -Input.gyro.attitude.z,
             -Input.gyro.attitude.w);
 
-        this.transform.localRotation = rotFix;
+        transform.localRotation = rotFix;
     }
 }
