@@ -12,7 +12,7 @@ public class ImportSpheres : MonoBehaviour
         // Pull down the JSON from our web-service
         WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs");
         yield return w;
-
+        
         print("Waiting for sphere definitions\n");
 
         // Add a wait to make sure we have the definitions
