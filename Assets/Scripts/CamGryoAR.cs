@@ -15,7 +15,7 @@ public class CamGryoAR : MonoBehaviour
         camParent = new GameObject("CamParent");
         camParent.transform.position = this.transform.position;
         //this.transform.parent = camParent.transform;
-        camParent.transform.Rotate(Vector3.right, 90);
+        //camParent.transform.Rotate(Vector3.right, 90);
         Input.gyro.enabled = true;
 
         WebCamTexture webcamTexture = new WebCamTexture();
