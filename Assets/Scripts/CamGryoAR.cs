@@ -18,8 +18,9 @@ public class CamGryoAR : MonoBehaviour
         camParent.transform.Rotate(Vector3.right, 90);
         Input.gyro.enabled = true;
 
-        WebCamTexture webcamTexture = new WebCamTexture();
-        webPlane.GetComponent<MeshRenderer>().material.mainTexture = webcamTexture;
+        
+        //WebCamTexture webcamTexture = new WebCamTexture();
+        //webPlane.GetComponent<MeshRenderer>().material.mainTexture = webcamTexture;
 
     }
 
