@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 public class TouchController : MonoBehaviour
 {
@@ -35,25 +36,15 @@ public class TouchController : MonoBehaviour
                 if (Physics.Raycast(ray, out hit, layerMask))
                 {
                     string nombre = hit.transform.gameObject.name;
-
-                    print("Started sphere import...\n");
-                    StartCoroutine(DownloadSpheres(nombre));
-
-
-
                     if (nombre != "arbol")
                     {
-                        //arbol.SetActive(false);
-                        //portada.SetActive(false);
+                        print("Started sphere import...\n");
+                        StartCoroutine(DownloadSpheres(nombre));
                     }
                     else
                     {
-                        //arbol.SetActive(true);
-                        //portada.SetActive(true);
-
+                        EliminarSphere();
                     }
-
-
                     Debug.Log("Touch event is called: " + nombre);
                 }
             }
@@ -82,26 +73,28 @@ public class TouchController : MonoBehaviour
     void ExtractSpheres(string json)
     {
         string json2 = "{\"valores\":" + json + "}";
-        var items = KPICollection.CreateFromJSON(json2);
+        var kpis = KPICollection.CreateFromJSON(json2).valores.OrderByDescending(h => h.YTD);
+        var kpiMasAlto = kpis.FirstOrDefault();
+        kpiMasAlto.porcentaje = 100;
+
+        foreach (var item in kpis)
+        {
+            item.porcentaje = (item.YTD * 100) / kpiMasAlto.YTD;
+        }
+
+
         print("Conversion");
         float x = 0, y = -0.5f, z = 3, r = 0.03f;
-        x = -(0.06f * ((items.valores.Count / 2)));
+        x = -(0.06f * ((kpis.Count() / 2)));
         int columna = 0;
-        foreach (var item in items.valores)
+        foreach (var item in kpis)
         {
             columna++;
-            // Gather center coordinates, radius and level
-
-            int level = 1;
-
-
-
-            Vector3 v = new Vector3(x, y, z);
-
 
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            float float_YTD = Convert.ToSingle(item.YTD);
+            float float_YTD = 0.01f * Convert.ToSingle(item.porcentaje);
+            sphere.name = float_YTD.ToString();
             sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
             x = x + (2 * (r + 0.002f));
             float d = 2 * r;
