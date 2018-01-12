@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class TouchController : MonoBehaviour
 {
+    private List<GameObject> sphereList;
 
     public int Layer;
     int layerMask;
 
-    private List<GameObject> sphereList;
-    public GameObject content;
-
-
     public GameObject portada;
-    
+
     // Use this for initialization
     void Start()
     {
+        sphereList = new List<GameObject>();
         layerMask = 1 << Layer;
 
 
@@ -37,6 +36,8 @@ public class TouchController : MonoBehaviour
                 {
                     string nombre = hit.transform.gameObject.name;
 
+                    print("Started sphere import...\n");
+                    StartCoroutine(DownloadSpheres(nombre));
 
 
 
@@ -59,12 +60,14 @@ public class TouchController : MonoBehaviour
         }
     }
 
-    public IEnumerator DownloadSpheres()
+    public IEnumerator DownloadSpheres(string Description)
     {
+        Description = Description.Replace(" ", "%20");
+        Debug.Log(Description);
         // Pull down the JSON from our web-service
-        WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs");
+        WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs?Description=" + Description);
         yield return w;
-
+        EliminarSphere();
         print("Waiting for sphere definitions\n");
 
         // Add a wait to make sure we have the definitions
@@ -76,49 +79,34 @@ public class TouchController : MonoBehaviour
 
     }
 
-    public void Iniciar()
-    {
-        print("Started sphere import...\n");
-        StartCoroutine(DownloadSpheres());
-    }
-
-
-
-
     void ExtractSpheres(string json)
     {
         string json2 = "{\"valores\":" + json + "}";
-
         var items = KPICollection.CreateFromJSON(json2);
-
-        //float x = 0, y = -0.01f, z = 0, r = 0.03f;
-        float x = content.gameObject.transform.position.x;
-        float y = content.gameObject.transform.position.y;
-        float z = content.gameObject.transform.position.z;
-        float r = 0.69f;
-        //x = -(0.06f * ((items.valores.Count / 2)));
-
-
-
+        print("Conversion");
+        float x = 0, y = -0.5f, z = 3, r = 0.03f;
+        x = -(0.06f * ((items.valores.Count / 2)));
         int columna = 0;
         foreach (var item in items.valores)
         {
             columna++;
+            // Gather center coordinates, radius and level
+
+            int level = 1;
+
+
+
+            Vector3 v = new Vector3(x, y, z);
+
 
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            sphere.name = item.Description;
-            sphere.transform.SetParent(content.gameObject.transform, false);
-            sphere.transform.position = new Vector3(x, y, z);
-            //sphere.AddComponent<LeanSelectable>();
-            //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
 
+            float float_YTD = Convert.ToSingle(item.YTD);
+            sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
+            x = x + (2 * (r + 0.002f));
+            float d = 2 * r;
 
-
-
-            x = x + (r + 0.2f);
-
-
-            sphere.transform.localScale = new Vector3(r, 0.009f, r);
+            sphere.transform.localScale = new Vector3(d, d + float_YTD, d);
 
             UnityEngine.Color col = UnityEngine.Color.white;
             switch (columna)
@@ -149,14 +137,13 @@ public class TouchController : MonoBehaviour
 
             sphere.GetComponent<Renderer>().material.color = col;
 
-
-
             sphereList.Add(sphere);
         }
 
 
 
     }
+
 
     public void EliminarSphere()
     {
@@ -166,6 +153,5 @@ public class TouchController : MonoBehaviour
         }
 
     }
-
 
 }
