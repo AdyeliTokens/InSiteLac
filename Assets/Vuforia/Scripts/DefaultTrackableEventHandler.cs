@@ -14,23 +14,30 @@ namespace Vuforia
     public class DefaultTrackableEventHandler : MonoBehaviour,
                                                 ITrackableEventHandler
     {
+        
+
+
         #region PRIVATE_MEMBER_VARIABLES
- 
+
         private TrackableBehaviour mTrackableBehaviour;
-    
+        private ImportSpheres mImportSpheres;
+
         #endregion // PRIVATE_MEMBER_VARIABLES
 
 
 
         #region UNTIY_MONOBEHAVIOUR_METHODS
-    
+
         void Start()
         {
+            mImportSpheres= FindObjectOfType<ImportSpheres>();
             mTrackableBehaviour = GetComponent<TrackableBehaviour>();
+
             if (mTrackableBehaviour)
             {
                 mTrackableBehaviour.RegisterTrackableEventHandler(this);
             }
+            
         }
 
         #endregion // UNTIY_MONOBEHAVIOUR_METHODS
@@ -84,8 +91,18 @@ namespace Vuforia
             }
 
             Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " found");
+            if (mImportSpheres == null)
+            {
+                Debug.Log("Null pasado de lanza");
+            }
+            else {
+                mImportSpheres.Iniciar();
+            }
+            
+
         }
 
+        
 
         private void OnTrackingLost()
         {
@@ -105,6 +122,14 @@ namespace Vuforia
             }
 
             Debug.Log("Trackable " + mTrackableBehaviour.TrackableName + " lost");
+            if (mImportSpheres == null)
+            {
+                
+            }
+            else
+            {
+                mImportSpheres.EliminarSphere();
+            }
         }
 
         #endregion // PRIVATE_METHODS
