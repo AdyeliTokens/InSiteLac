@@ -1,159 +1,171 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class TouchController : MonoBehaviour {
-	
-	public int Layer;
-	int layerMask;
+public class TouchController : MonoBehaviour
+{
 
+    public int Layer;
+    int layerMask;
 
-	public GameObject portada;
-
-
-	public GameObject panelInfo;
-	public GameObject pCO2;
-	public GameObject pEnergy;
-	public GameObject pLTI;
-	public GameObject pTRI;
-	public GameObject pWater;
-	public GameObject pVQI;
-	public GameObject pDM;
-	public GameObject pTDY;
-	public GameObject pCPQI;
-	public GameObject pDiversity;
-	public GameObject pMTC;
-	public GameObject pMarket;
-	public GameObject pOpen1;
-	public GameObject pOpen2;
-
-	public GameObject arbol;
-	public GameObject open;
-	public GameObject lti;
-	public GameObject vqi;
-	public GameObject cpqi;
-	public GameObject diversity;
-	public GameObject tri;
-	public GameObject dim;
-	public GameObject tabacco;
-	public GameObject leadeship;
-	public GameObject smoke;
-	public GameObject market;
+    private List<GameObject> sphereList;
+    public GameObject content;
 
 
-	// Use this for initialization
-	void Start () {
-		layerMask = 1<<Layer;
+    public GameObject portada;
+    
+    // Use this for initialization
+    void Start()
+    {
+        layerMask = 1 << Layer;
 
 
 
-	}
+    }
 
-	private void ocultarVR(){
-		
-	}
-	private void mostrarVR(){
-		
-	}
+    void Update()
+    {
+
+        RaycastHit hit = new RaycastHit();
+        for (int i = 0; i < Input.touchCount; ++i)
+        {
+            if (Input.GetTouch(i).phase.Equals(TouchPhase.Began))
+            {
+                // Construct a ray from the current touch coordinates
+                Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
+                if (Physics.Raycast(ray, out hit, layerMask))
+                {
+                    string nombre = hit.transform.gameObject.name;
 
 
-	void Update () {
-	
-		
-		
-		RaycastHit hit = new RaycastHit();
-	        for (int i = 0; i < Input.touchCount; ++i) {
-	            if (Input.GetTouch(i).phase.Equals(TouchPhase.Began)) {
-	            // Construct a ray from the current touch coordinates
-	            Ray ray = Camera.main.ScreenPointToRay(Input.GetTouch(i).position);
-	            if (Physics.Raycast(ray, out hit, layerMask)) {
 
-					switch(hit.transform.gameObject.name){
-					case "co2Touch":
-						pCO2.SetActive (true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "ltiTouch":
-						pLTI.SetActive (true);
+                    if (nombre != "arbol")
+                    {
+                        //arbol.SetActive(false);
+                        //portada.SetActive(false);
+                    }
+                    else
+                    {
+                        //arbol.SetActive(true);
+                        //portada.SetActive(true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "triTouch":
-						pTRI.SetActive (true);
+                    }
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "waterTouch":
-						pWater.SetActive (true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "vqiTouch":
-						pVQI.SetActive (true);
+                    Debug.Log("Touch event is called: " + nombre);
+                }
+            }
+        }
+    }
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "dmTouch":
-						pDM.SetActive (true);
+    public IEnumerator DownloadSpheres()
+    {
+        // Pull down the JSON from our web-service
+        WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs");
+        yield return w;
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "tabaccoTouch":
-						pTDY.SetActive (true);
+        print("Waiting for sphere definitions\n");
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "cpqiTouch":
-						pCPQI.SetActive (true);
+        // Add a wait to make sure we have the definitions
+        yield return new WaitForSeconds(1f);
+        print("Received sphere definitions\n");
+        print(w.text);
+        // Extract the spheres from our JSON results
+        ExtractSpheres(w.text);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "diversityTouch":
-						pDiversity.SetActive (true);
+    }
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "mtcTouch":
-						pMTC.SetActive (true);
+    public void Iniciar()
+    {
+        print("Started sphere import...\n");
+        StartCoroutine(DownloadSpheres());
+    }
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "marketTouch":
-						pMarket.SetActive (true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "open1Touch":
-						pOpen1.SetActive (true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					case "open2Touch":
-						pOpen2.SetActive (true);
 
-						arbol.SetActive (false);
-						portada.SetActive (false);
-						break;
-					
-					
-					
+    void ExtractSpheres(string json)
+    {
+        string json2 = "{\"valores\":" + json + "}";
 
-					}
-					Debug.Log("Touch event is called "+ hit.transform.gameObject);
-              	}
-			}
-		}
-	}
+        var items = KPICollection.CreateFromJSON(json2);
+
+        //float x = 0, y = -0.01f, z = 0, r = 0.03f;
+        float x = content.gameObject.transform.position.x;
+        float y = content.gameObject.transform.position.y;
+        float z = content.gameObject.transform.position.z;
+        float r = 0.69f;
+        //x = -(0.06f * ((items.valores.Count / 2)));
+
+
+
+        int columna = 0;
+        foreach (var item in items.valores)
+        {
+            columna++;
+
+            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            sphere.name = item.Description;
+            sphere.transform.SetParent(content.gameObject.transform, false);
+            sphere.transform.position = new Vector3(x, y, z);
+            //sphere.AddComponent<LeanSelectable>();
+            //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
+
+
+
+
+            x = x + (r + 0.2f);
+
+
+            sphere.transform.localScale = new Vector3(r, 0.009f, r);
+
+            UnityEngine.Color col = UnityEngine.Color.white;
+            switch (columna)
+            {
+                case 1:
+                    col = UnityEngine.Color.red;
+                    break;
+                case 2:
+                    col = UnityEngine.Color.yellow;
+                    break;
+                case 3:
+                    col = UnityEngine.Color.green;
+                    break;
+                case 4:
+                    col = UnityEngine.Color.cyan;
+                    break;
+                case 5:
+                    col = UnityEngine.Color.magenta;
+                    break;
+                case 6:
+                    col = UnityEngine.Color.blue;
+                    break;
+                case 7:
+                    col = UnityEngine.Color.grey;
+                    columna = 0;
+                    break;
+            }
+
+            sphere.GetComponent<Renderer>().material.color = col;
+
+
+
+            sphereList.Add(sphere);
+        }
+
+
+
+    }
+
+    public void EliminarSphere()
+    {
+        foreach (var item in sphereList)
+        {
+            Destroy(item);
+        }
+
+    }
+
+
 }

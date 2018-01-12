@@ -68,7 +68,8 @@ public class ImportSpheres : MonoBehaviour
             sphere.transform.SetParent(content.gameObject.transform, false);
             sphere.transform.position = new Vector3(x, y, z);
             sphere.AddComponent<LeanSelectable>();
-            sphere.AddComponent<LeanSelectableSpriteRendererColor>(); 
+            sphere.AddComponent<LeanSelectableSpriteRendererColor>();
+            
 
 
 
