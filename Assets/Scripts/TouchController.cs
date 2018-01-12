@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 public class TouchController : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class TouchController : MonoBehaviour
     int layerMask;
 
     public GameObject portada;
+    public Text message;
 
     // Use this for initialization
     void Start()
@@ -38,14 +40,14 @@ public class TouchController : MonoBehaviour
                     string nombre = hit.transform.gameObject.name;
                     if (nombre != "arbol")
                     {
-                        print("Started sphere import...\n");
+                        message.text= "Importando informacion de " + nombre + "...";
                         StartCoroutine(DownloadSpheres(nombre));
                     }
                     else
                     {
                         EliminarSphere();
                     }
-                    Debug.Log("Touch event is called: " + nombre);
+                    Debug.Log("Touch event is called: " + nombre + "...");
                 }
             }
         }
@@ -83,7 +85,7 @@ public class TouchController : MonoBehaviour
         }
 
 
-        print("Conversion");
+        message.text = "Conversion de datos a graficas..." ;
         float x = 0, y = -0.5f, z = 3, r = 0.03f;
         x = -(0.06f * ((kpis.Count() / 2)));
         int columna = 0;
@@ -133,7 +135,7 @@ public class TouchController : MonoBehaviour
             sphereList.Add(sphere);
         }
 
-
+        message.text = "Grafica creada.";
 
     }
 

@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using Lean.Touch;
+using UnityEngine.UI;
 
 public class ImportSpheres : MonoBehaviour
 {
     private List<GameObject> sphereList;
+
+    public Text message;
     public GameObject content;
-    
+
 
     public IEnumerator DownloadSpheres()
     {
@@ -37,7 +40,7 @@ public class ImportSpheres : MonoBehaviour
 
     public void Iniciar()
     {
-        print("Started sphere import...\n");
+        message.text = "Importando KPI para mostrar...";
         StartCoroutine(DownloadSpheres());
     }
 
@@ -46,14 +49,14 @@ public class ImportSpheres : MonoBehaviour
     void ExtractSpheres(string json)
     {
         string json2 = "{\"valores\":" + json + "}";
-
+        message.text = "Creando KPI...";
         var items = KPICollection.CreateFromJSON(json2);
 
         //float x = 0, y = -0.01f, z = 0, r = 0.03f;
         float x = content.gameObject.transform.position.x;
         float y = content.gameObject.transform.position.y;
         float z = content.gameObject.transform.position.z;
-        float r = 0.69f;
+        float r = 0.8f;
         //x = -(0.06f * ((items.valores.Count / 2)));
 
 
@@ -69,47 +72,23 @@ public class ImportSpheres : MonoBehaviour
             sphere.transform.position = new Vector3(x, y, z);
             sphere.AddComponent<LeanSelectable>();
             sphere.AddComponent<LeanSelectableSpriteRendererColor>();
-            
+
 
 
 
             x = x + (r + 0.2f);
-            
+
 
             sphere.transform.localScale = new Vector3(r, 0.009f, r);
 
-            UnityEngine.Color col = UnityEngine.Color.white;
-            switch (columna)
-            {
-                case 1:
-                    col = UnityEngine.Color.red;
-                    break;
-                case 2:
-                    col = UnityEngine.Color.yellow;
-                    break;
-                case 3:
-                    col = UnityEngine.Color.green;
-                    break;
-                case 4:
-                    col = UnityEngine.Color.cyan;
-                    break;
-                case 5:
-                    col = UnityEngine.Color.magenta;
-                    break;
-                case 6:
-                    col = UnityEngine.Color.blue;
-                    break;
-                case 7:
-                    col = UnityEngine.Color.grey;
-                    columna = 0;
-                    break;
-            }
-
+            Color col = UnityEngine.Color.white;
             sphere.GetComponent<Renderer>().material.color = col;
 
 
 
             sphereList.Add(sphere);
+
+            message.text = "Selecciona un KPI para continuar";
         }
 
 
@@ -126,7 +105,6 @@ public class ImportSpheres : MonoBehaviour
     }
 
     void Update()
-
     {
 
     }
