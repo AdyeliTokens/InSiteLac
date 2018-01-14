@@ -23,6 +23,7 @@ public class KPI
     public Double YTD;
     public int Mes_Efectivo;
     public int Anio_Efectivo;
+    public Double? porcentaje;
 
 
     public static KPI CreateFromJSON(string jsonString)
