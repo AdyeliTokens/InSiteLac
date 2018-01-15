@@ -94,12 +94,26 @@ public class TouchController : MonoBehaviour
             columna++;
 
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			GameObject text = new GameObject();
+
+
+			TextMesh t = text.AddComponent<TextMesh>();
+			t.text = item.Description;
+			t.fontSize = 30;
 
             float float_YTD = 0.01f * Convert.ToSingle(item.porcentaje);
             sphere.name = float_YTD.ToString();
+
             sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
+			t.transform.localPosition = new Vector3(x, (y + ((float_YTD / 2))+ float_YTD) + 0.02f, z);
+
+
             x = x + (2 * (r + 0.002f));
             float d = 2 * r;
+
+
+			t.transform.localEulerAngles += new Vector3(90, 0, 0);
+
 
             sphere.transform.localScale = new Vector3(d, d + float_YTD, d);
 
