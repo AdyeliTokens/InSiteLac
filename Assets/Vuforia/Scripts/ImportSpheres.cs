@@ -8,9 +8,11 @@ using UnityEngine.UI;
 public class ImportSpheres : MonoBehaviour
 {
     private List<GameObject> sphereList;
+    private List<TextMesh> titleList;
 
     public Text message;
     public GameObject content;
+    public Camera camara;
 
 
     public IEnumerator DownloadSpheres()
@@ -34,6 +36,7 @@ public class ImportSpheres : MonoBehaviour
     void Start()
     {
         sphereList = new List<GameObject>();
+        titleList = new List<TextMesh>();
         //print("Started sphere import...\n");
         //StartCoroutine(DownloadSpheres());
     }
@@ -63,22 +66,48 @@ public class ImportSpheres : MonoBehaviour
         {
             columna++;
 
-			float x =  UnityEngine.Random.Range(2, 2);
-			float y = UnityEngine.Random.Range(2, 2);
-			float z = content.gameObject.transform.position.z;
+			float x =  UnityEngine.Random.Range(content.gameObject.transform.position.x - 3, content.gameObject.transform.position.x + 3);
+			float y = UnityEngine.Random.Range(content.gameObject.transform.position.y -4, content.gameObject.transform.position.y + 4);
+			float z = content.gameObject.transform.position.z -1;
 			float r = 0.8f;
 
 			GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            GameObject text = new GameObject();
+            TextMesh t = text.AddComponent<TextMesh>();
+
+
             sphere.name = item.Description;
+            t.name = "KPI_" + item.YTD;
+
             sphere.transform.SetParent(content.gameObject.transform, false);
+            t.transform.SetParent(sphere.gameObject.transform, false);
+
             sphere.transform.position = new Vector3(x, y, z);
-            sphere.AddComponent<LeanSelectable>();
-            sphere.AddComponent<LeanSelectableSpriteRendererColor>();
+            t.transform.localPosition = new Vector3( -1, 0 , 0);
+            t.transform.localScale = new Vector3(.1f, .1f, 1);
+            t.transform.localEulerAngles = new Vector3(90, 270, 90);
+
+
+            t.text = item.Description;
+            t.fontSize = 30;
+            t.fontStyle = FontStyle.Bold;
+            t.characterSize = 2;
+
+
+            //sphere.AddComponent<Floater>();
+            //GameObject translate = new GameObject();
+            //translate.AddComponent<LeanTranslate>();
+            //translate.RequiredSelectable = sphere.gameObject;
+
+
+
+            //sphere.AddComponent<LeanSelectable>();
+            //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
 
 
 
 
-            
+
 
             sphere.transform.localScale = new Vector3(r, 0.009f, r);
 
