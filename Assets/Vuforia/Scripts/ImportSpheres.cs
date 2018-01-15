@@ -95,16 +95,16 @@ public class ImportSpheres : MonoBehaviour
             t.fontStyle = FontStyle.Bold;
             t.characterSize = 2;
 
-            //LeanSelectable selectable = sphere.AddComponent<LeanSelectable>();
-            
-            //LeanTranslateSmooth translade = sphere.AddComponent<LeanTranslateSmooth>();
-            //translade.RequiredSelectable = selectable;
-            
-            //translade.Dampening = 10;
 
 
+            LeanSelectable selectable = sphere.AddComponent<LeanSelectable>();
+            LeanTranslateSmooth translade = sphere.AddComponent<LeanTranslateSmooth>();
+            translade.RequiredSelectable = selectable;
+            translade.Dampening = 10;
+            //sphere.AddComponent<Floater>();
 
-            sphere.AddComponent<LeanTranslate>();
+
+            //sphere.AddComponent<LeanTranslate>();
 
             //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
 
