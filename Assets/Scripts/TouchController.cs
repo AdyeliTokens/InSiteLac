@@ -88,12 +88,14 @@ public class TouchController : MonoBehaviour
             item.porcentaje = (item.YTD * 100) / kpiMasAlto.YTD;
         }
 
-        float x = 0, y = -0.5f, z = 3, r = 0.03f;
+        float x = 3, y = -0.5f, z = 3, r = 0.03f;
         x = -(0.06f * ((kpis.Count() / 2)));
         int columna = 0;
 
         GameObject titulo = new GameObject();
-        TextMesh tGrafica = titulo.AddComponent<TextMesh>();
+		TextMesh tGrafica = titulo.AddComponent<TextMesh>();
+
+
         tGrafica.name = "titulo_"+ description;
         tGrafica.text = description;
         tGrafica.fontSize = 30;
@@ -103,7 +105,9 @@ public class TouchController : MonoBehaviour
         tGrafica.transform.localEulerAngles = new Vector3(0, 0, 0);
         tGrafica.transform.localScale = new Vector3(0.02f, 0.02f, 1);
         tGrafica.anchor = TextAnchor.UpperCenter;
-        
+
+		tGrafica.gameObject.AddComponent<Outline>().effectColor= Color.black;
+
 
 
         message.text = "Conversion de datos a graficas...";
@@ -112,11 +116,15 @@ public class TouchController : MonoBehaviour
         {
             columna++;
 
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+
+
             GameObject text = new GameObject();
             TextMesh t = text.AddComponent<TextMesh>();
 			float rounded = (float)(Math.Round(item.YTD, 2));
-			t.text = rounded.ToString();
+			DateTime fecha = new DateTime (item.Anio_Efectivo, item.Mes_Efectivo, 1);
+			t.text = rounded.ToString() +" " +  fecha.ToString("MMMM");
             t.fontSize = 30;
 
 

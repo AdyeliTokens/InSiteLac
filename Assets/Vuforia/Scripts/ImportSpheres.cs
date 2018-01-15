@@ -53,10 +53,7 @@ public class ImportSpheres : MonoBehaviour
         var items = KPICollection.CreateFromJSON(json2);
 
         //float x = 0, y = -0.01f, z = 0, r = 0.03f;
-        float x = content.gameObject.transform.position.x;
-        float y = content.gameObject.transform.position.y;
-        float z = content.gameObject.transform.position.z;
-        float r = 0.8f;
+
         //x = -(0.06f * ((items.valores.Count / 2)));
 
 
@@ -66,7 +63,12 @@ public class ImportSpheres : MonoBehaviour
         {
             columna++;
 
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			float x =  UnityEngine.Random.Range(2, 2);
+			float y = UnityEngine.Random.Range(2, 2);
+			float z = content.gameObject.transform.position.z;
+			float r = 0.8f;
+
+			GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             sphere.name = item.Description;
             sphere.transform.SetParent(content.gameObject.transform, false);
             sphere.transform.position = new Vector3(x, y, z);
@@ -76,8 +78,7 @@ public class ImportSpheres : MonoBehaviour
 
 
 
-            x = x + (r + 0.2f);
-
+            
 
             sphere.transform.localScale = new Vector3(r, 0.009f, r);
 
