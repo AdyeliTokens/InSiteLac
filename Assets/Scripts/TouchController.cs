@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class TouchController : MonoBehaviour
 {
     private List<GameObject> sphereList;
-	private List<GameObject> titleList;
+	private List<TextMesh> titleList;
 
-	private GameObject title;
+	private TextMesh title;
 
     public int Layer;
     int layerMask;
@@ -22,8 +22,8 @@ public class TouchController : MonoBehaviour
     void Start()
     {
         sphereList = new List<GameObject>();
-		titleList = new List<GameObject>();
-		title = new GameObject();
+		titleList = new List<TextMesh>();
+		title = new TextMesh();
 
         layerMask = 1 << Layer;
 
@@ -44,6 +44,7 @@ public class TouchController : MonoBehaviour
                     string nombre = hit.transform.gameObject.name;
                     if (nombre != "arbol")
                     {
+						EliminarSphere();
                         message.text = "Importando informacion de " + nombre + "...";
                         StartCoroutine(DownloadSpheres(nombre));
                     }
@@ -66,8 +67,7 @@ public class TouchController : MonoBehaviour
         WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs?Description=" + descriptionSinEspacios);
         yield return w;
 		message.text = "Esperando informacion de " + Description + "... ";
-		EliminarSphere();
-        // Add a wait to make sure we have the definitions
+		// Add a wait to make sure we have the definitions
         yield return new WaitForSeconds(1f);
         print("Received sphere definitions\n");
         print(w.text);
@@ -114,8 +114,6 @@ public class TouchController : MonoBehaviour
 
             GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
             GameObject text = new GameObject();
-
-
             TextMesh t = text.AddComponent<TextMesh>();
 			float rounded = (float)(Math.Round(item.YTD, 2));
 			t.text = rounded.ToString();
@@ -128,12 +126,12 @@ public class TouchController : MonoBehaviour
 			t.name = "text_" + item.YTD; 
             
 
-            sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
-            t.transform.localPosition = new Vector3(x, (y +  float_YTD) + 0.04f, z);
+            sphere.transform.position = new Vector3(x , y + (float_YTD / 2), z);
+            t.transform.localPosition = new Vector3(x - 0.05f , (y +  float_YTD) + 0.20f, z);
 
 
-            x = x + (2 * (r + 0.002f));
-            float d = 2 * r;
+            x = x + (6 * (r + 0.010f));
+            float d = 6 * r;
 
 
             t.transform.localEulerAngles = new Vector3(0, 0, 45);
@@ -171,6 +169,8 @@ public class TouchController : MonoBehaviour
             sphere.GetComponent<Renderer>().material.color = col;
 
             sphereList.Add(sphere);
+			titleList.Add (t);
+			title = tGrafica;
         }
 
         message.text = "Grafica creada.";
