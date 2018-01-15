@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class TouchController : MonoBehaviour
 {
     private List<GameObject> sphereList;
+	private List<TextMesh> titleList;
+
+	private TextMesh title;
 
     public int Layer;
     int layerMask;
@@ -19,9 +22,10 @@ public class TouchController : MonoBehaviour
     void Start()
     {
         sphereList = new List<GameObject>();
+		titleList = new List<TextMesh>();
+		title = new TextMesh();
+
         layerMask = 1 << Layer;
-
-
 
     }
 
@@ -40,7 +44,8 @@ public class TouchController : MonoBehaviour
                     string nombre = hit.transform.gameObject.name;
                     if (nombre != "arbol")
                     {
-                        message.text= "Importando informacion de " + nombre + "...";
+						EliminarSphere();
+                        message.text = "Importando informacion de " + nombre + "...";
                         StartCoroutine(DownloadSpheres(nombre));
                     }
                     else
@@ -55,24 +60,23 @@ public class TouchController : MonoBehaviour
 
     public IEnumerator DownloadSpheres(string Description)
     {
-        Description = Description.Replace(" ", "%20");
-        Debug.Log(Description);
-        // Pull down the JSON from our web-service
-        WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs?Description=" + Description);
-        yield return w;
-        EliminarSphere();
-        print("Waiting for sphere definitions\n");
 
-        // Add a wait to make sure we have the definitions
+        string descriptionSinEspacios = Description.Replace(" ", "%20");
+        
+        // Pull down the JSON from our web-service
+        WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs?Description=" + descriptionSinEspacios);
+        yield return w;
+		message.text = "Esperando informacion de " + Description + "... ";
+		// Add a wait to make sure we have the definitions
         yield return new WaitForSeconds(1f);
         print("Received sphere definitions\n");
         print(w.text);
         // Extract the spheres from our JSON results
-        ExtractSpheres(w.text);
+        ExtractSpheres(Description, w.text);
 
     }
 
-    void ExtractSpheres(string json)
+    void ExtractSpheres(string description, string json)
     {
         string json2 = "{\"valores\":" + json + "}";
         var kpis = KPICollection.CreateFromJSON(json2).valores.OrderByDescending(h => h.YTD);
@@ -84,24 +88,64 @@ public class TouchController : MonoBehaviour
             item.porcentaje = (item.YTD * 100) / kpiMasAlto.YTD;
         }
 
-
-        message.text = "Conversion de datos a graficas..." ;
-        float x = 0, y = -0.5f, z = 3, r = 0.03f;
+        float x = 3, y = -0.5f, z = 3, r = 0.03f;
         x = -(0.06f * ((kpis.Count() / 2)));
         int columna = 0;
+
+        GameObject titulo = new GameObject();
+		TextMesh tGrafica = titulo.AddComponent<TextMesh>();
+
+
+        tGrafica.name = "titulo_"+ description;
+        tGrafica.text = description;
+        tGrafica.fontSize = 30;
+        tGrafica.fontStyle = FontStyle.Bold;
+        tGrafica.characterSize = 2;
+        tGrafica.transform.localPosition = new Vector3(x, y + 1.3f , z);
+        tGrafica.transform.localEulerAngles = new Vector3(0, 0, 0);
+        tGrafica.transform.localScale = new Vector3(0.02f, 0.02f, 1);
+        tGrafica.anchor = TextAnchor.UpperCenter;
+
+		tGrafica.gameObject.AddComponent<Outline>().effectColor= Color.black;
+
+
+
+        message.text = "Conversion de datos a graficas...";
+        
         foreach (var item in kpis)
         {
             columna++;
 
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
-            float float_YTD = 0.01f * Convert.ToSingle(item.porcentaje);
+
+
+            GameObject text = new GameObject();
+            TextMesh t = text.AddComponent<TextMesh>();
+			float rounded = (float)(Math.Round(item.YTD, 2));
+			DateTime fecha = new DateTime (item.Anio_Efectivo, item.Mes_Efectivo, 1);
+			t.text = rounded.ToString() +" " +  fecha.ToString("MMMM");
+            t.fontSize = 30;
+
+
+
+            float float_YTD = 0.005f * Convert.ToSingle(item.porcentaje);
             sphere.name = float_YTD.ToString();
-            sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
-            x = x + (2 * (r + 0.002f));
-            float d = 2 * r;
+			t.name = "text_" + item.YTD; 
+            
+
+            sphere.transform.position = new Vector3(x , y + (float_YTD / 2), z);
+            t.transform.localPosition = new Vector3(x - 0.05f , (y +  float_YTD) + 0.20f, z);
+
+
+            x = x + (6 * (r + 0.010f));
+            float d = 6 * r;
+
+
+            t.transform.localEulerAngles = new Vector3(0, 0, 45);
 
             sphere.transform.localScale = new Vector3(d, d + float_YTD, d);
+            t.transform.localScale = new Vector3(0.02f,0.02f, 1);
 
             UnityEngine.Color col = UnityEngine.Color.white;
             switch (columna)
@@ -133,6 +177,8 @@ public class TouchController : MonoBehaviour
             sphere.GetComponent<Renderer>().material.color = col;
 
             sphereList.Add(sphere);
+			titleList.Add (t);
+			title = tGrafica;
         }
 
         message.text = "Grafica creada.";
@@ -146,7 +192,11 @@ public class TouchController : MonoBehaviour
         {
             Destroy(item);
         }
-
+		foreach (var item in titleList)
+		{
+			Destroy(item);
+		}
+		Destroy(title);
     }
 
 }

@@ -7,10 +7,14 @@ using UnityEngine.UI;
 
 public class ImportSpheres : MonoBehaviour
 {
-    private List<GameObject> sphereList;
+    
+    public List<GameObject> sphereList;
+    private List<TextMesh> titleList;
 
     public Text message;
     public GameObject content;
+    
+    
 
 
     public IEnumerator DownloadSpheres()
@@ -34,6 +38,7 @@ public class ImportSpheres : MonoBehaviour
     void Start()
     {
         sphereList = new List<GameObject>();
+        titleList = new List<TextMesh>();
         //print("Started sphere import...\n");
         //StartCoroutine(DownloadSpheres());
     }
@@ -53,10 +58,7 @@ public class ImportSpheres : MonoBehaviour
         var items = KPICollection.CreateFromJSON(json2);
 
         //float x = 0, y = -0.01f, z = 0, r = 0.03f;
-        float x = content.gameObject.transform.position.x;
-        float y = content.gameObject.transform.position.y;
-        float z = content.gameObject.transform.position.z;
-        float r = 0.8f;
+
         //x = -(0.06f * ((items.valores.Count / 2)));
 
 
@@ -66,17 +68,49 @@ public class ImportSpheres : MonoBehaviour
         {
             columna++;
 
-            GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Cube);
+			float x =  UnityEngine.Random.Range(content.gameObject.transform.position.x - 3, content.gameObject.transform.position.x + 3);
+			float y = UnityEngine.Random.Range(content.gameObject.transform.position.y -4, content.gameObject.transform.position.y + 4);
+			float z = content.gameObject.transform.position.z -1;
+			float r = 0.8f;
+
+			GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            GameObject text = new GameObject();
+            TextMesh t = text.AddComponent<TextMesh>();
+
+
             sphere.name = item.Description;
+            t.name = "KPI_" + item.YTD;
+
             sphere.transform.SetParent(content.gameObject.transform, false);
+            t.transform.SetParent(sphere.gameObject.transform, false);
+
             sphere.transform.position = new Vector3(x, y, z);
-            sphere.AddComponent<LeanSelectable>();
-            sphere.AddComponent<LeanSelectableSpriteRendererColor>();
+            t.transform.localPosition = new Vector3( -1, 0 , 0);
+            t.transform.localScale = new Vector3(.1f, .1f, 1);
+            t.transform.localEulerAngles = new Vector3(90, 270, 90);
+
+
+            t.text = item.Description;
+            t.fontSize = 30;
+            t.fontStyle = FontStyle.Bold;
+            t.characterSize = 2;
+
+
+
+            LeanSelectable selectable = sphere.AddComponent<LeanSelectable>();
+            LeanTranslateSmooth translade = sphere.AddComponent<LeanTranslateSmooth>();
+            translade.RequiredSelectable = selectable;
+            translade.Dampening = 10;
+            //sphere.AddComponent<Floater>();
+
+
+            //sphere.AddComponent<LeanTranslate>();
+
+            //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
 
 
 
 
-            x = x + (r + 0.2f);
 
 
             sphere.transform.localScale = new Vector3(r, 0.009f, r);

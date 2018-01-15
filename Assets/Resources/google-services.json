@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "528858106769",
+    "firebase_url": "https://insite-b51f0.firebaseio.com",
+    "project_id": "insite-b51f0",
+    "storage_bucket": "insite-b51f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:528858106769:android:327184577ce183a6",
+        "android_client_info": {
+          "package_name": "com.pmm.insite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "528858106769-g8ekbp8i9papj2eqrv1dgqotdld2llo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaWLhMEote_ec2YkW9-jQbLONlWbjd3wg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
