@@ -96,6 +96,7 @@ namespace Vuforia
                 Debug.Log("Null pasado de lanza");
             }
             else {
+                if(mImportSpheres.sphereList.Count<= 0)
                 mImportSpheres.Iniciar();
             }
             
@@ -128,7 +129,7 @@ namespace Vuforia
             }
             else
             {
-                mImportSpheres.EliminarSphere();
+                //mImportSpheres.EliminarSphere();
             }
         }
 

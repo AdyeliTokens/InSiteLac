@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 public class ImportSpheres : MonoBehaviour
 {
-    private List<GameObject> sphereList;
+    
+    public List<GameObject> sphereList;
     private List<TextMesh> titleList;
 
     public Text message;
     public GameObject content;
-    public Camera camara;
+    
+    
 
 
     public IEnumerator DownloadSpheres()
@@ -93,15 +95,17 @@ public class ImportSpheres : MonoBehaviour
             t.fontStyle = FontStyle.Bold;
             t.characterSize = 2;
 
+            //LeanSelectable selectable = sphere.AddComponent<LeanSelectable>();
+            
+            //LeanTranslateSmooth translade = sphere.AddComponent<LeanTranslateSmooth>();
+            //translade.RequiredSelectable = selectable;
+            
+            //translade.Dampening = 10;
 
-            //sphere.AddComponent<Floater>();
-            //GameObject translate = new GameObject();
-            //translate.AddComponent<LeanTranslate>();
-            //translate.RequiredSelectable = sphere.gameObject;
 
 
+            sphere.AddComponent<LeanTranslate>();
 
-            //sphere.AddComponent<LeanSelectable>();
             //sphere.AddComponent<LeanSelectableSpriteRendererColor>();
 
 
