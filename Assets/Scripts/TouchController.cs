@@ -85,11 +85,26 @@ public class TouchController : MonoBehaviour
             item.porcentaje = (item.YTD * 100) / kpiMasAlto.YTD;
         }
 
-
-        message.text = "Conversion de datos a graficas...";
         float x = 0, y = -0.5f, z = 3, r = 0.03f;
         x = -(0.06f * ((kpis.Count() / 2)));
         int columna = 0;
+
+        GameObject titulo = new GameObject();
+        TextMesh tGrafica = titulo.AddComponent<TextMesh>();
+        tGrafica.name = "titulo_"+ description;
+        tGrafica.text = description;
+        tGrafica.fontSize = 30;
+        tGrafica.fontStyle = FontStyle.Bold;
+        tGrafica.characterSize = 2;
+        tGrafica.transform.localPosition = new Vector3(x, y - 0.06f , z);
+        tGrafica.transform.localEulerAngles = new Vector3(0, 0, 0);
+        tGrafica.transform.localScale = new Vector3(0.02f, 0.02f, 1);
+        tGrafica.anchor = TextAnchor.UpperCenter;
+        
+
+
+        message.text = "Conversion de datos a graficas...";
+        
         foreach (var item in kpis)
         {
             columna++;
