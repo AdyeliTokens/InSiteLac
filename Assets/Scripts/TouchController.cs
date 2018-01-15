@@ -8,6 +8,9 @@ using UnityEngine.UI;
 public class TouchController : MonoBehaviour
 {
     private List<GameObject> sphereList;
+	private List<GameObject> titleList;
+
+	private GameObject title;
 
     public int Layer;
     int layerMask;
@@ -19,9 +22,10 @@ public class TouchController : MonoBehaviour
     void Start()
     {
         sphereList = new List<GameObject>();
+		titleList = new List<GameObject>();
+		title = new GameObject();
+
         layerMask = 1 << Layer;
-
-
 
     }
 
@@ -61,9 +65,8 @@ public class TouchController : MonoBehaviour
         // Pull down the JSON from our web-service
         WWW w = new WWW("https://serverpmi.tr3sco.net/api/KPIs?Description=" + descriptionSinEspacios);
         yield return w;
-        EliminarSphere();
-        print("Waiting for sphere definitions\n");
-
+		message.text = "Esperando informacion de " + Description + "... ";
+		EliminarSphere();
         // Add a wait to make sure we have the definitions
         yield return new WaitForSeconds(1f);
         print("Received sphere definitions\n");
@@ -96,7 +99,7 @@ public class TouchController : MonoBehaviour
         tGrafica.fontSize = 30;
         tGrafica.fontStyle = FontStyle.Bold;
         tGrafica.characterSize = 2;
-        tGrafica.transform.localPosition = new Vector3(x, y - 0.06f , z);
+        tGrafica.transform.localPosition = new Vector3(x, y + 1.3f , z);
         tGrafica.transform.localEulerAngles = new Vector3(0, 0, 0);
         tGrafica.transform.localScale = new Vector3(0.02f, 0.02f, 1);
         tGrafica.anchor = TextAnchor.UpperCenter;
@@ -114,16 +117,19 @@ public class TouchController : MonoBehaviour
 
 
             TextMesh t = text.AddComponent<TextMesh>();
-            t.text = item.YTD.ToString();
+			float rounded = (float)(Math.Round(item.YTD, 2));
+			t.text = rounded.ToString();
             t.fontSize = 30;
 
-            float float_YTD = 0.01f * Convert.ToSingle(item.porcentaje);
+
+
+            float float_YTD = 0.005f * Convert.ToSingle(item.porcentaje);
             sphere.name = float_YTD.ToString();
-            t.name = "text_" + item.YTD; 
+			t.name = "text_" + item.YTD; 
             
 
             sphere.transform.position = new Vector3(x, y + (float_YTD / 2), z);
-            t.transform.localPosition = new Vector3(x, (y + ((float_YTD / 2)) + float_YTD) + 0.002f, z);
+            t.transform.localPosition = new Vector3(x, (y +  float_YTD) + 0.04f, z);
 
 
             x = x + (2 * (r + 0.002f));
@@ -178,7 +184,11 @@ public class TouchController : MonoBehaviour
         {
             Destroy(item);
         }
-
+		foreach (var item in titleList)
+		{
+			Destroy(item);
+		}
+		Destroy(title);
     }
 
 }
